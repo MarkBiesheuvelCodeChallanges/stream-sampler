@@ -17,16 +17,29 @@ const getRandomNumber = (n) => {
  */
 const getRepresentativeRandomSample = (input, k) => {
   // Convert string to array
-  let characters = input.split('')
+  const characters = input.split('')
+  const indices = characters.map((character, index) => index)
+  const picks = []
 
-  // Remove characters until there are `k` characters left
-  while (characters.length > k) {
-    // Remove random character
-    const indexToRemove = getRandomNumber(characters.length)
-    characters.splice(indexToRemove, 1)
+  // Pick `k` random characters by index, so we can sort them later
+  let n = indices.length
+  for (let i = 0; i < k; i++) {
+    // Pick random index of a character from the input string
+    const r = getRandomNumber(n)
+    picks.push(indices[r])
+
+    // Swap last character with the one that was picked
+    indices[r] = indices[n - 1]
+
+    // Update n. This way we don't need to create new arrays
+    n--
   }
 
-  return characters.join('')
+  // Put the indexes back in order
+  picks.sort((a, b) => (a - b))
+
+  // Map the indexes back to the characters and join them together
+  return picks.map((index) => characters[index]).join('')
 }
 
 /**
